@@ -32,7 +32,7 @@
     galleryHeading: 'Event Moments & Photos',
     galleryAlbumUrl: '', // Google Photos / Drive album link
     venueName: 'The Bilwa by SIPL',
-    venueAddress: 'G85M+JW8, PJR Enclave, PJR Layout,\nMiyapur, Hyderabad, Telangana 500050',
+    venueAddress: 'Flat No: 803, The Bilwa by SIPL,\nG85M+JW8, PJR Enclave, PJR Layout,\nMiyapur, Hyderabad, Telangana 500050',
     mapEmbedUrl: 'https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1902.4835572071504!2d78.3350671!3d17.5090832!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb92810eac0001%3A0x591312c95758d7ae!2sG85M%2BJW8%2C%20PJR%20Enclave%2C%20PJR%20Layout%2C%20Miyapur%2C%20Hyderabad%2C%20Telangana%20500050!5e0!3m2!1sen!2sin!4v1795002922777!5m2!1sen!2sin',
     mapDirectionsUrl: 'https://www.google.com/maps/place/17.5090832,78.3350671/@17.5090832,78.3350671,18z',
     // 3D Architectural Experience & Geospatial Configuration (ENG-3D-MAPS-BILWA-V3)
@@ -87,7 +87,7 @@
         var parsed = JSON.parse(saved);
         // Automatic migration if old cached Ananthapur or Secunderabad address exists
         var needsUpdate = false;
-        if (parsed.venueAddress && (parsed.venueAddress.indexOf('Ananthapur') !== -1 || parsed.venueAddress.indexOf('Nagaram') !== -1 || parsed.venueAddress.indexOf('FJR7') !== -1 || parsed.venueAddress.indexOf('Secunderabad') !== -1 || parsed.venueAddress.indexOf('500049') !== -1)) {
+        if (parsed.venueAddress && (parsed.venueAddress.indexOf('Ananthapur') !== -1 || parsed.venueAddress.indexOf('Nagaram') !== -1 || parsed.venueAddress.indexOf('FJR7') !== -1 || parsed.venueAddress.indexOf('Secunderabad') !== -1 || parsed.venueAddress.indexOf('500049') !== -1 || parsed.venueAddress.indexOf('803') === -1)) {
           parsed.venueAddress = DEFAULT_CONFIG.venueAddress;
           parsed.venueName = DEFAULT_CONFIG.venueName;
           parsed.mapEmbedUrl = DEFAULT_CONFIG.mapEmbedUrl;

@@ -10,7 +10,7 @@
   'use strict';
 
   var DEFAULT_COORDS = '17.5090832,78.3350671';
-  var DEFAULT_ADDRESS = 'G85M+JW8, PJR Enclave, PJR Layout,\nMiyapur, Hyderabad, Telangana 500050';
+  var DEFAULT_ADDRESS = 'Flat No: 803, The Bilwa by SIPL,\nG85M+JW8, PJR Enclave, PJR Layout,\nMiyapur, Hyderabad, Telangana 500050';
   var BROADCAST_CHANNEL_NAME = 'knock_invitation_channel';
 
   var mapContainer = null;
