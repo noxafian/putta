@@ -1,4 +1,10 @@
 {
   "name": "putta-family-invitation",
-  "cleanUrls": true
+  "cleanUrls": true,
+  "rewrites": [
+    {
+      "source": "/admin",
+      "destination": "/admin.html"
+    }
+  ]
 }
