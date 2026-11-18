@@ -17,7 +17,7 @@
 
     var title = config.title || 'Putta Family Gruhapravesam Ceremony';
     var desc  = config.invitationNote || 'You are cordially invited to celebrate the Putta Family Gruhapravesam Ceremony.';
-    var loc   = config.venueAddress || 'The Bilwa by SIPL, PJR Enclave, Miyapur, Hyderabad, Telangana 500049';
+    var loc   = config.venueAddress || 'G85M+JW8, PJR Enclave, PJR Layout, Miyapur, Hyderabad, Telangana 500050';
 
     // Dates: Default 3 December 2026, 03:00 AM IST (UTC+5:30)
     // 3:00 AM IST on 3 Dec = 21:30 UTC on 2 Dec

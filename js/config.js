@@ -87,7 +87,7 @@
         var parsed = JSON.parse(saved);
         // Automatic migration if old cached Ananthapur or Secunderabad address exists
         var needsUpdate = false;
-        if (parsed.venueAddress && (parsed.venueAddress.indexOf('Ananthapur') !== -1 || parsed.venueAddress.indexOf('Nagaram') !== -1 || parsed.venueAddress.indexOf('FJR7') !== -1 || parsed.venueAddress.indexOf('Secunderabad') !== -1)) {
+        if (parsed.venueAddress && (parsed.venueAddress.indexOf('Ananthapur') !== -1 || parsed.venueAddress.indexOf('Nagaram') !== -1 || parsed.venueAddress.indexOf('FJR7') !== -1 || parsed.venueAddress.indexOf('Secunderabad') !== -1 || parsed.venueAddress.indexOf('500049') !== -1)) {
           parsed.venueAddress = DEFAULT_CONFIG.venueAddress;
           parsed.venueName = DEFAULT_CONFIG.venueName;
           parsed.mapEmbedUrl = DEFAULT_CONFIG.mapEmbedUrl;

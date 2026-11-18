@@ -10,7 +10,7 @@
   'use strict';
 
   var DEFAULT_COORDS = '17.5090832,78.3350671';
-  var DEFAULT_ADDRESS = 'The Bilwa by SIPL, PJR Enclave,\nMiyapur, Hyderabad, Telangana 500049';
+  var DEFAULT_ADDRESS = 'G85M+JW8, PJR Enclave, PJR Layout,\nMiyapur, Hyderabad, Telangana 500050';
   var BROADCAST_CHANNEL_NAME = 'knock_invitation_channel';
 
   var mapContainer = null;
@@ -30,7 +30,7 @@
       return customUrl;
     }
 
-    return 'https://www.google.com/maps/embed?pb=!4v1794973388621!6m8!1m7!1shmRnIz6EAxYKfH1zXYMTUw!2m2!1d17.50908324018658!2d78.3350671355801!3f242.91818378115238!4f7.403032915544273!5f0.7820865974627469';
+    return 'https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1902.4835572071504!2d78.3350671!3d17.5090832!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb92810eac0001%3A0x591312c95758d7ae!2sG85M%2BJW8%2C%20PJR%20Enclave%2C%20PJR%20Layout%2C%20Miyapur%2C%20Hyderabad%2C%20Telangana%20500050!5e0!3m2!1sen!2sin!4v1795002922777!5m2!1sen!2sin';
   }
 
   /**

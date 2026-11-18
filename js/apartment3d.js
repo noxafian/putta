@@ -160,19 +160,19 @@
   }
 
   /**
-   * Activate 3D canvas: expand height, show canvas, hide photo
+   * Activate 3D canvas: expand vertical height, show canvas, hide photo
    */
   function activateThreeD() {
     if (Apartment3D.active) return;
     Apartment3D.active = true;
 
-    // Expand frame height
+    // Expand frame height for a tall, immersive 3D architectural exploration
     Apartment3D.container.classList.add('house-photo-frame--3d-expanded');
 
     // Hide activate button
     if (Apartment3D.activateBtn) Apartment3D.activateBtn.style.display = 'none';
 
-    // Show canvas with fade
+    // Show canvas with smooth fade-in
     if (Apartment3D.canvas) {
       Apartment3D.canvas.style.display = 'block';
       requestAnimationFrame(function () {
@@ -180,17 +180,21 @@
       });
     }
 
-    // Hide photo
-    if (Apartment3D.photoImg) Apartment3D.photoImg.style.display = 'none';
+    // Hide photo after canvas fades in to avoid any visual flicker
+    setTimeout(function () {
+      if (Apartment3D.active && Apartment3D.photoImg) {
+        Apartment3D.photoImg.style.display = 'none';
+      }
+    }, 450);
 
     // Show 3D UI overlay
     if (Apartment3D.uiOverlay) Apartment3D.uiOverlay.style.display = 'flex';
 
-    // Resize renderer to fit new container size
+    // Resize renderer to fit new expanded vertical container size
     setTimeout(function () {
       if (Apartment3D.renderer && Apartment3D.camera) {
         var w = Apartment3D.container.clientWidth || 800;
-        var h = Apartment3D.container.clientHeight || 520;
+        var h = Apartment3D.container.clientHeight || (window.innerWidth >= 768 ? 680 : (window.innerWidth >= 480 ? 600 : 520));
         Apartment3D.renderer.setSize(w, h, false);
         Apartment3D.camera.aspect = w / h;
         Apartment3D.camera.updateProjectionMatrix();
@@ -199,24 +203,26 @@
   }
 
   /**
-   * Deactivate 3D — return to static photo, collapse height
+   * Deactivate 3D — return to static photo, collapse vertical height
    */
   function deactivateThreeD() {
     Apartment3D.active = false;
 
-    // Collapse frame height
+    // Show photo first so it reveals under the fading canvas
+    if (Apartment3D.photoImg) Apartment3D.photoImg.style.display = 'block';
+
+    // Collapse frame height back to original photo height
     Apartment3D.container.classList.remove('house-photo-frame--3d-expanded');
 
     // Fade out + hide canvas
     if (Apartment3D.canvas) {
       Apartment3D.canvas.style.opacity = '0';
       setTimeout(function () {
-        if (Apartment3D.canvas) Apartment3D.canvas.style.display = 'none';
+        if (!Apartment3D.active && Apartment3D.canvas) {
+          Apartment3D.canvas.style.display = 'none';
+        }
       }, 400);
     }
-
-    // Show photo
-    if (Apartment3D.photoImg) Apartment3D.photoImg.style.display = 'block';
 
     // Hide 3D overlay
     if (Apartment3D.uiOverlay) Apartment3D.uiOverlay.style.display = 'none';
@@ -251,7 +257,7 @@ function setupScene() {
     powerPreference: 'high-performance',
     alpha: false
   });
-  renderer.setSize(width, height);
+  renderer.setSize(width, height, false);
 
   // Apply Tier Pixel Ratio
   var maxDpr = Apartment3D.qualityTier === 1 ? 2.0 : (Apartment3D.qualityTier === 2 ? 1.5 : 1.0);
@@ -787,11 +793,13 @@ function scrollToSection3() {
 function setupEvents() {
   window.addEventListener('resize', function () {
     if (!Apartment3D.container || !Apartment3D.renderer || !Apartment3D.camera) return;
-    var w = Apartment3D.container.clientWidth;
-    var h = Math.max(480, Math.round(w * 0.76));
+    var w = Apartment3D.container.clientWidth || 800;
+    var h = Apartment3D.active
+      ? (Apartment3D.container.clientHeight || (window.innerWidth >= 768 ? 680 : (window.innerWidth >= 480 ? 600 : 520)))
+      : Math.max(480, Math.round(w * 0.76));
     Apartment3D.camera.aspect = w / h;
     Apartment3D.camera.updateProjectionMatrix();
-    Apartment3D.renderer.setSize(w, h);
+    Apartment3D.renderer.setSize(w, h, false);
   });
 }
 
@@ -901,6 +909,8 @@ if (document.readyState === 'loading') {
 // Expose global interface for debugging or external triggers
 window.BilwaApartment3D = {
   init: init,
+  activate3D: activateThreeD,
+  deactivate3D: deactivateThreeD,
   flyToEntrance: startEntranceFlyIn,
   resetView: resetHeroView,
   togglePhoto: togglePhotoOr3D,
