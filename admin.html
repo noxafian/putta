@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Knock Portal — Putta Family Gruhapravesam Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/admin.css" />
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════════════
+       1 · LOGIN SCREEN (Protected by Name + Password)
+  ═══════════════════════════════════════════════ -->
+  <div id="login-view" class="login-container">
+    <div class="login-card" id="login-card">
+      <div class="login-diya" aria-hidden="true">卐 ॐ 卐</div>
+      <h1 class="login-title">Knock Portal</h1>
+      <p class="login-subtitle">Private Event & Visitor Control</p>
+
+      <div id="login-error" class="login-error" role="alert">
+        Incorrect Name or Password. Please try again.
+      </div>
+
+      <form id="login-form" autocomplete="on">
+        <div class="form-group">
+          <label class="form-label" for="login-name">Admin Name</label>
+          <div class="form-input-wrapper">
+            <input
+              type="text"
+              id="login-name"
+              class="form-input"
+              placeholder="e.g. putta"
+              required
+              autocomplete="username"
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="login-pass">Master Password</label>
+          <div class="form-input-wrapper">
+            <input
+              type="password"
+              id="login-pass"
+              class="form-input"
+              placeholder="Enter password"
+              required
+              autocomplete="current-password"
+            />
+            <button type="button" id="toggle-pass-btn" class="input-icon-btn" aria-label="Toggle password visibility">👁️</button>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary">
+          <span>Enter Portal</span>
+          <span aria-hidden="true">➔</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       2 · ADMIN DASHBOARD (Authenticated)
+  ═══════════════════════════════════════════════ -->
+  <div id="dashboard-view" class="admin-app" style="display: none;">
+
+    <!-- Top Navigation Bar -->
+    <header class="admin-navbar">
+      <div class="nav-brand">
+        <span class="nav-brand-icon" aria-hidden="true">ॐ</span>
+        <span class="nav-brand-title">Putta Family · Knock Portal</span>
+        <div class="nav-status-badge">
+          <span class="status-dot"></span>
+          <span id="sync-status-text">Live Sync Ready</span>
+        </div>
+      </div>
+
+      <div class="nav-actions">
+        <a href="index.html" target="_blank" class="btn-secondary" title="Preview live invitation">
+          <span>Live Invitation</span>
+          <span aria-hidden="true">↗</span>
+        </a>
+        <button id="logout-btn" class="btn-danger-outline" type="button">
+          Log Out
+        </button>
+      </div>
+    </header>
+
+    <!-- Navigation Tabs -->
+    <nav class="admin-tabs" role="tablist">
+      <button class="tab-btn active" data-tab="tab-analytics" role="tab" aria-selected="true">
+        <span>📊</span> Visitor Analytics
+      </button>
+      <button class="tab-btn" data-tab="tab-timer" role="tab" aria-selected="false">
+        <span>⏱️</span> Countdown Timer
+      </button>
+      <button class="tab-btn" data-tab="tab-card" role="tab" aria-selected="false">
+        <span>💌</span> Card Customizer
+      </button>
+      <button class="tab-btn" data-tab="tab-photos" role="tab" aria-selected="false">
+        <span>📸</span> Event Photos
+      </button>
+      <button class="tab-btn" data-tab="tab-language" role="tab" aria-selected="false">
+        <span>🌐</span> Language & Bilingual
+      </button>
+      <button class="tab-btn" data-tab="tab-security" role="tab" aria-selected="false">
+        <span>🔐</span> Security & Sync
+      </button>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="admin-main">
+
+      <!-- ── TAB 1: VISITOR ANALYTICS ── -->
+      <section id="tab-analytics" class="tab-panel active" role="tabpanel">
+        
+        <!-- Today's Visitors Header & Live Status -->
+        <div class="analytics-header-banner">
+          <div>
+            <h2 class="analytics-section-heading">Today's Visitors</h2>
+            <p class="analytics-section-sub">
+              Daily unique visitors reset at midnight IST (UTC+5:30). Historical counts are safely preserved.
+            </p>
+          </div>
+          <div class="today-date-badge" id="today-date-badge">
+            <span class="badge-icon">🗓️</span>
+            <span id="today-date-text">Today</span>
+          </div>
+        </div>
+
+        <!-- Primary KPI Cards: Unique Visitors, Active Now, Active Tabs -->
+        <div class="kpi-grid kpi-grid--primary">
+          <div class="kpi-card kpi-card--highlight">
+            <div class="kpi-icon-wrap">
+              <span class="kpi-icon">👥</span>
+              <span class="kpi-tag">Today</span>
+            </div>
+            <div class="kpi-value" id="kpi-today-unique">0</div>
+            <div class="kpi-label">Unique Visitors</div>
+            <div class="kpi-desc">1 count per device / day</div>
+          </div>
+
+          <div class="kpi-card kpi-card--active-now">
+            <div class="kpi-icon-wrap">
+              <span class="kpi-icon live-pulse-icon">🟢</span>
+              <span class="kpi-tag kpi-tag--live">Live</span>
+            </div>
+            <div class="kpi-value" id="kpi-active-now">0</div>
+            <div class="kpi-label">Active Now</div>
+            <div class="kpi-desc">Unique visitors on site now</div>
+          </div>
+
+          <div class="kpi-card">
+            <div class="kpi-icon-wrap">
+              <span class="kpi-icon">📑</span>
+              <span class="kpi-tag">Live</span>
+            </div>
+            <div class="kpi-value" id="kpi-active-tabs">0</div>
+            <div class="kpi-label">Active Tabs</div>
+            <div class="kpi-desc">Total open invitation tabs</div>
+          </div>
+        </div>
+
+        <!-- Secondary Interaction & Total Stats -->
+        <div class="kpi-grid kpi-grid--secondary">
+          <div class="kpi-card kpi-card--mini">
+            <div class="kpi-icon">👁️</div>
+            <div class="kpi-value" id="kpi-total-views">0</div>
+            <div class="kpi-label">Total Visits</div>
+          </div>
+          <div class="kpi-card kpi-card--mini">
+            <div class="kpi-icon">📅</div>
+            <div class="kpi-value" id="kpi-calendar-clicks">0</div>
+            <div class="kpi-label">Calendar Adds</div>
+          </div>
+          <div class="kpi-card kpi-card--mini">
+            <div class="kpi-icon">📍</div>
+            <div class="kpi-value" id="kpi-location-clicks">0</div>
+            <div class="kpi-label">Location / Maps</div>
+          </div>
+        </div>
+
+        <!-- Split Grid: Devices & Platforms -->
+        <div class="dashboard-split">
+          <!-- Device Breakdown (Mobile, Desktop/Laptop, Tablet, Smart TV) -->
+          <div class="panel-card">
+            <div class="panel-title">
+              <span>Device Breakdown</span>
+              <span class="panel-title-tags">📱 💻 📟 📺</span>
+            </div>
+            
+            <div class="metric-row">
+              <div class="metric-info">
+                <span class="metric-name"><span class="metric-icon">📱</span> Mobile Phones</span>
+                <span class="metric-val" id="dev-mobile-pct">0% (0)</span>
+              </div>
+              <div class="progress-track">
+                <div id="dev-mobile-bar" class="progress-fill" style="width: 0%;"></div>
+              </div>
+            </div>
+
+            <div class="metric-row">
+              <div class="metric-info">
+                <span class="metric-name"><span class="metric-icon">💻</span> Desktop / Laptop</span>
+                <span class="metric-val" id="dev-desktop-pct">0% (0)</span>
+              </div>
+              <div class="progress-track">
+                <div id="dev-desktop-bar" class="progress-fill" style="width: 0%;"></div>
+              </div>
+            </div>
+
+            <div class="metric-row">
+              <div class="metric-info">
+                <span class="metric-name"><span class="metric-icon">📟</span> Tablet / iPad</span>
+                <span class="metric-val" id="dev-tablet-pct">0% (0)</span>
+              </div>
+              <div class="progress-track">
+                <div id="dev-tablet-bar" class="progress-fill" style="width: 0%;"></div>
+              </div>
+            </div>
+
+            <div class="metric-row">
+              <div class="metric-info">
+                <span class="metric-name"><span class="metric-icon">📺</span> Smart TV</span>
+                <span class="metric-val" id="dev-tv-pct">0% (0)</span>
+              </div>
+              <div class="progress-track">
+                <div id="dev-tv-bar" class="progress-fill progress-fill--tv" style="width: 0%;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Platform / OS Breakdown -->
+          <div class="panel-card">
+            <div class="panel-title">
+              <span>Operating System</span>
+              <span class="panel-title-tags">🤖 🍏 🪟 📺</span>
+            </div>
+
+            <div class="metric-row">
+              <div class="metric-info">
+                <span class="metric-name"><span class="metric-icon">🤖</span> Android</span>
+                <span class="metric-val" id="plat-android-pct">0% (0)</span>
+              </div>
+              <div class="progress-track">
+                <div id="plat-android-bar" class="progress-fill" style="width: 0%;"></div>
+              </div>
+            </div>
+
+            <div class="metric-row">
+              <div class="metric-info">
+                <span class="metric-name"><span class="metric-icon">🍏</span> iOS (iPhone / iPad)</span>
+                <span class="metric-val" id="plat-ios-pct">0% (0)</span>
+              </div>
+              <div class="progress-track">
+                <div id="plat-ios-bar" class="progress-fill" style="width: 0%;"></div>
+              </div>
+            </div>
+
+            <div class="metric-row">
+              <div class="metric-info">
+                <span class="metric-name"><span class="metric-icon">🪟</span> Windows & Mac</span>
+                <span class="metric-val" id="plat-other-pct">0% (0)</span>
+              </div>
+              <div class="progress-track">
+                <div id="plat-other-bar" class="progress-fill" style="width: 0%;"></div>
+              </div>
+            </div>
+
+            <div class="metric-row">
+              <div class="metric-info">
+                <span class="metric-name"><span class="metric-icon">📺</span> Smart TV OS</span>
+                <span class="metric-val" id="plat-tv-pct">0% (0)</span>
+              </div>
+              <div class="progress-track">
+                <div id="plat-tv-bar" class="progress-fill progress-fill--tv" style="width: 0%;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Historical Daily Count Table -->
+        <div class="panel-card" style="margin-bottom: 24px;">
+          <div class="panel-title">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span>📅 Historical Daily Count</span>
+              <span class="badge-pill">Archived Records</span>
+            </div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">Auto-saved daily</div>
+          </div>
+          <div class="visitor-table-wrapper">
+            <table class="visitor-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Unique Visitors</th>
+                  <th>Total Visits</th>
+                  <th>Device Breakdown</th>
+                </tr>
+              </thead>
+              <tbody id="daily-history-tbody">
+                <tr>
+                  <td colspan="4" style="text-align: center; color: var(--text-dim); padding: 18px;">
+                    Loading daily visitor history…
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Recent Visitors Feed -->
+        <div class="panel-card">
+          <div class="panel-title">
+            <span>Recent Guest Activity</span>
+            <div style="display: flex; gap: 8px;">
+              <button id="refresh-stats-btn" class="btn-secondary" type="button">🔄 Refresh</button>
+              <button id="clear-stats-btn" class="btn-danger-outline" type="button">🗑️ Clear Data</button>
+            </div>
+          </div>
+          <div class="visitor-table-wrapper">
+            <table class="visitor-table">
+              <thead>
+                <tr>
+                  <th>Visitor ID</th>
+                  <th>Device</th>
+                  <th>Platform</th>
+                  <th>Screen Size</th>
+                  <th>Time</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="visitor-log-tbody">
+                <tr>
+                  <td colspan="6" style="text-align: center; color: var(--text-dim); padding: 20px;">
+                    No guest visits recorded yet. Open the invitation link in another tab/window to test!
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ── TAB 2: COUNTDOWN TIMER CONTROLS ── -->
+      <section id="tab-timer" class="tab-panel" role="tabpanel">
+        
+        <!-- Master Toggle Banner -->
+        <div class="toggle-banner">
+          <div class="toggle-info">
+            <h3>Countdown Timer Visibility</h3>
+            <p>Control whether the gold countdown clock is shown on the live invitation website.</p>
+          </div>
+          <label class="switch" aria-label="Toggle countdown timer">
+            <input type="checkbox" id="timer-toggle-checkbox" checked />
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="dashboard-split">
+          <!-- Timer Settings Form -->
+          <div class="panel-card">
+            <div class="panel-title">Timer Configuration</div>
+            
+            <div class="form-group">
+              <label class="form-label" for="timer-heading-input">Timer Section Heading</label>
+              <input type="text" id="timer-heading-input" class="form-input" value="Auspicious Muhurtham In" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="timer-target-input">Target Date & Time (IST)</label>
+              <input type="datetime-local" id="timer-target-input" class="form-input" />
+              <p style="font-size: 0.78rem; color: var(--text-dim); margin-top: 6px;">
+                Current set target: <strong id="current-target-display" style="color: var(--color-gold);">31 Aug 2026, 03:00 AM IST</strong>
+              </p>
+            </div>
+
+            <div class="action-bar" style="margin-top: 16px;">
+              <button id="save-timer-btn" class="btn-primary" type="button" style="width: auto;">
+                Save Timer Settings
+              </button>
+            </div>
+          </div>
+
+          <!-- Live Dashboard Preview of the Clock -->
+          <div class="panel-card">
+            <div class="panel-title">Live Clock State</div>
+            <div class="timer-preview-card">
+              <span class="preview-badge" id="timer-status-badge">ACTIVE ON SITE</span>
+              <h3 style="font-family: var(--font-serif); font-size: 1.3rem; color: var(--color-gold-light); margin-bottom: 12px;" id="dash-timer-heading">
+                Auspicious Muhurtham In
+              </h3>
+              <div style="display: flex; justify-content: center; gap: 8px;" id="dash-timer-units">
+                <div style="background: rgba(44, 74, 62, 0.2); border: 1px solid var(--border-gold); padding: 8px 12px; border-radius: 8px; min-width: 54px;">
+                  <div style="font-size: 1.5rem; font-family: var(--font-serif); color: var(--color-gold);" id="dash-days">00</div>
+                  <div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase;">Days</div>
+                </div>
+                <div style="background: rgba(44, 74, 62, 0.2); border: 1px solid var(--border-gold); padding: 8px 12px; border-radius: 8px; min-width: 54px;">
+                  <div style="font-size: 1.5rem; font-family: var(--font-serif); color: var(--color-gold);" id="dash-hours">00</div>
+                  <div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase;">Hours</div>
+                </div>
+                <div style="background: rgba(44, 74, 62, 0.2); border: 1px solid var(--border-gold); padding: 8px 12px; border-radius: 8px; min-width: 54px;">
+                  <div style="font-size: 1.5rem; font-family: var(--font-serif); color: var(--color-gold);" id="dash-mins">00</div>
+                  <div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase;">Mins</div>
+                </div>
+                <div style="background: rgba(44, 74, 62, 0.2); border: 1px solid var(--border-gold); padding: 8px 12px; border-radius: 8px; min-width: 54px;">
+                  <div style="font-size: 1.5rem; font-family: var(--font-serif); color: var(--color-gold);" id="dash-secs">00</div>
+                  <div style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase;">Secs</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ── TAB 3: CARD CUSTOMIZER & LIVE PREVIEW ── -->
+      <section id="tab-card" class="tab-panel" role="tabpanel">
+        
+        <div class="customizer-layout">
+          <!-- Form Controls -->
+          <div class="panel-card">
+            <div class="panel-title">Edit Invitation Details</div>
+
+            <div class="form-group">
+              <label class="form-label" for="cfg-ceremony">Ceremony Name</label>
+              <input type="text" id="cfg-ceremony" class="form-input" value="Housewarming Ceremony" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="cfg-family">Full Family Name</label>
+              <input type="text" id="cfg-family" class="form-input" value="Putta Ramakrishna, Laxmi Prasanna, Sangeeth &amp; Vijaya Gowri" />
+            </div>
+
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label" for="cfg-date-day">Event Date</label>
+                <input type="text" id="cfg-date-day" class="form-input" value="3 December 2026" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="cfg-date-sub">Date Subtitle</label>
+                <input type="text" id="cfg-date-sub" class="form-input" value="2026 · Thursday" />
+              </div>
+            </div>
+
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label" for="cfg-time">Event Time</label>
+                <input type="text" id="cfg-time" class="form-input" value="3:00 AM" />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="cfg-time-sub">Time Subtitle</label>
+                <input type="text" id="cfg-time-sub" class="form-input" value="Thursday Early Morning" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="cfg-venue">Venue & Physical Address</label>
+              <textarea id="cfg-venue" class="form-input" rows="2" placeholder="Enter physical address for guests">The Bilwa by SIPL, PJR Enclave, Miyapur, Hyderabad, Telangana 500049</textarea>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="cfg-map-link">Google Maps Directions Link</label>
+              <input type="url" id="cfg-map-link" class="form-input" placeholder="https://maps.google.com/?q=..." value="https://www.google.com/maps/place/17.5090832,78.3350671/@17.5090832,78.3350671,18z" />
+              <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">Direct navigation link opened when guests tap "Get Directions".</div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="cfg-map-embed">Custom Google Maps Embed URL (Optional)</label>
+              <input type="text" id="cfg-map-embed" class="form-input" placeholder="Leave blank for automatic smart map" value="" />
+              <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">Leave blank to auto-generate the map from the address above.</div>
+            </div>
+
+            <div class="form-group" style="background: rgba(212,175,55,0.08); padding: 12px; border-radius: 8px; border: 1px solid rgba(212,175,55,0.25);">
+              <label style="display: flex; align-items: center; justify-content: space-between; cursor: pointer;">
+                <span style="font-weight: 600; color: var(--color-green-deep);">🌐 3D Apartment Experience (The Bilwa by SIPL)</span>
+                <input type="checkbox" id="cfg-3d-active" checked style="width: 18px; height: 18px; accent-color: var(--color-gold);" />
+              </label>
+              <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">
+                Enables the interactive Three.js 3D exterior visualization with entrance gate fly-through inside Section 2.
+              </div>
+            </div>
+
+            <div class="form-group" style="background: rgba(44,74,62,0.06); padding: 12px; border-radius: 8px; border: 1px solid rgba(44,74,62,0.2);">
+              <div style="display: flex; align-items: center; justify-content: space-between;">
+                <span style="font-weight: 600; color: var(--color-green-deep);">🎥 Putta Family Welcome Video (greetings.mp4)</span>
+                <span style="font-size: 0.72rem; background: var(--color-green-deep); color: #FFF; padding: 2px 8px; border-radius: 12px;">Active · 10s HD</span>
+              </div>
+              <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">
+                Plays automatically in Section 3 when guests fly through the entrance gate or scroll into view, featuring full Telugu audio and bilingual captions.
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="cfg-note">Invitation Greeting Message</label>
+              <textarea id="cfg-note" class="form-input">We cordially invite you and your family to grace the auspicious occasion of our Housewarming Ceremony and bless our new home with your presence and warm wishes.</textarea>
+            </div>
+
+            <div class="action-bar">
+              <button id="reset-card-btn" class="btn-secondary" type="button">Reset to Defaults</button>
+              <button id="save-card-btn" class="btn-primary" type="button" style="width: auto;">
+                ✨ Save & Publish Changes
+              </button>
+            </div>
+          </div>
+
+          <!-- Live Scaled Preview Box -->
+          <div>
+            <div class="panel-title" style="margin-bottom: 8px;">Live Card Preview</div>
+            <div class="card-preview-container">
+              <div style="font-size: 1.4rem; margin-bottom: 6px; color: var(--color-gold);">卐 ॐ 卐</div>
+              <div class="prev-title" id="prev-title">Housewarming<br/>Ceremony</div>
+              <div class="prev-family" id="prev-family">Putta Ramakrishna, Laxmi Prasanna, Sangeeth &amp; Vijaya Gowri</div>
+              
+              <div class="prev-details-pill">
+                <span id="prev-date">3 December 2026</span>
+                <span>·</span>
+                <span id="prev-time">3:00 AM</span>
+              </div>
+
+              <div class="prev-note" id="prev-note">
+                We cordially invite you and your family to grace the auspicious occasion of our Housewarming Ceremony.
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ── TAB 4: EVENT PHOTOS ── -->
+      <section id="tab-photos" class="tab-panel" role="tabpanel">
+
+        <!-- Master Toggle Banner -->
+        <div class="toggle-banner">
+          <div class="toggle-info">
+            <h3>Event Photos Visibility</h3>
+            <p>Show or hide the "View Event Photos" button on the live invitation. Guests tap it to open your Google Photos album.</p>
+          </div>
+          <div style="display: flex; align-items: center; gap: 16px;">
+            <span class="preview-badge" id="gallery-status-badge" style="background: rgba(248, 113, 113, 0.15); color: var(--color-danger);">HIDDEN FROM SITE</span>
+            <label class="switch" aria-label="Toggle Event Photos">
+              <input type="checkbox" id="gallery-toggle-checkbox" />
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="dashboard-split">
+
+          <!-- Google Photos Album Link -->
+          <div class="panel-card">
+            <div class="panel-title">Google Photos Album</div>
+
+            <div class="form-group">
+              <label class="form-label" for="gallery-heading-input">Button Label on Invitation</label>
+              <input type="text" id="gallery-heading-input" class="form-input" value="Event Moments & Photos" />
+              <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">This is the heading shown on the invitation card button.</div>
+            </div>
+
+            <div class="form-group" style="margin-top: 8px;">
+              <label class="form-label" for="gallery-album-url">Google Photos Album URL</label>
+              <input type="url" id="gallery-album-url" class="form-input" placeholder="https://photos.google.com/share/..." />
+              <div style="font-size: 0.72rem; color: var(--text-muted); margin-top: 6px; line-height: 1.7;">
+                📸 How to get the link:<br/>
+                1. Open <strong>Google Photos</strong><br/>
+                2. Create an album with your event photos<br/>
+                3. Click <strong>Share → Create link</strong><br/>
+                4. Copy and paste the link above
+              </div>
+            </div>
+
+            <div class="action-bar" style="margin-top: 20px;">
+              <button id="save-gallery-btn" class="btn-primary" type="button" style="width: auto;">
+                ✨ Save & Publish
+              </button>
+            </div>
+          </div>
+
+          <!-- Preview & Status -->
+          <div class="panel-card">
+            <div class="panel-title">Preview</div>
+            <div class="timer-preview-card" style="text-align: center; padding: 32px 20px;">
+              <div style="font-size: 2rem; margin-bottom: 12px;">📸</div>
+              <div style="font-family: var(--font-serif); font-size: 1.2rem; color: var(--color-gold-light); margin-bottom: 8px;" id="gallery-preview-heading">Event Moments & Photos</div>
+              <div style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 20px;">Guests tap the card on the invitation to open your album in Google Photos.</div>
+              <div id="gallery-url-preview" style="font-size: 0.78rem; color: var(--text-dim); word-break: break-all; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 8px; border: 1px solid var(--border-gold);">
+                No album URL set yet
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- ── TAB: LANGUAGE & BILINGUAL SETTINGS ── -->
+      <section id="tab-language" class="tab-panel" role="tabpanel">
+        
+        <div class="toggle-banner">
+          <div class="toggle-info">
+            <h3>Language Selection Pop-up (Telugu / English)</h3>
+            <p>When enabled, guests opening the website will see an auspicious pop-up asking: "Would you like to view in Telugu or English?".</p>
+          </div>
+          <label class="switch" aria-label="Toggle language pop-up">
+            <input type="checkbox" id="lang-toggle-checkbox" checked />
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="dashboard-split">
+          <!-- Language Configuration Form -->
+          <div class="panel-card">
+            <div class="panel-title">Bilingual Preferences</div>
+
+            <div class="form-group">
+              <label class="form-label">Default / Fallback Language</label>
+              <div style="display: flex; gap: 20px; margin-top: 8px;">
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--text-light); font-size: 0.9rem;">
+                  <input type="radio" name="cfg-default-lang" id="cfg-lang-en" value="en" checked /> English
+                </label>
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--text-light); font-size: 0.9rem;">
+                  <input type="radio" name="cfg-default-lang" id="cfg-lang-te" value="te" /> తెలుగు (Telugu)
+                </label>
+              </div>
+              <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 6px;">Used when the pop-up prompt is turned off, or before a guest selects their language.</div>
+            </div>
+
+            <div class="form-group" style="margin-top: 18px;">
+              <label class="form-label" style="display: flex; align-items: center; justify-content: space-between;">
+                <span>Show Floating Language Switcher Pill</span>
+                <input type="checkbox" id="cfg-show-switcher" checked style="width: 16px; height: 16px; cursor: pointer;" />
+              </label>
+              <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Displays the floating '🌐 తెలుగు / EN' button on the invitation page so guests can toggle languages anytime.</div>
+            </div>
+
+            <div class="action-bar" style="margin-top: 20px;">
+              <button id="save-lang-btn" class="btn-primary" type="button" style="width: auto;">
+                ✨ Save Language Settings
+              </button>
+            </div>
+          </div>
+
+          <!-- Status & Quick Test -->
+          <div class="panel-card">
+            <div class="panel-title">Status & Quick Test</div>
+            <div class="timer-preview-card" style="text-align: center; padding: 24px 20px;">
+              <span class="preview-badge" id="lang-status-badge">POP-UP PROMPT ACTIVE</span>
+              <div style="font-size: 2rem; margin: 12px 0 8px;">🌐 🪔</div>
+              <h3 style="font-family: var(--font-serif); font-size: 1.25rem; color: var(--color-gold-light); margin-bottom: 8px;">
+                Telugu & English Bilingual Ready
+              </h3>
+              <p style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 18px; line-height: 1.5;">
+                All ceremonial cards, muhurtham timers, dates, and directions adapt automatically to the guest's choice.
+              </p>
+
+              <div style="display: flex; flex-direction: column; gap: 10px;">
+                <button type="button" id="btn-reset-guest-prompt" class="btn-secondary" style="width: 100%; justify-content: center; font-size: 0.82rem;">
+                  🔄 Reset Guest Session (Test Pop-up Again)
+                </button>
+                <a href="index.html" target="_blank" class="btn-primary" style="width: 100%; justify-content: center; font-size: 0.82rem; text-decoration: none; display: inline-flex; align-items: center;">
+                  🚀 Open Live Invitation in New Tab
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ── TAB 5: SECURITY & CLOUD SYNC ── -->
+      <section id="tab-security" class="tab-panel" role="tabpanel">
+        
+        <div class="dashboard-split">
+          <!-- Change Password -->
+          <div class="panel-card">
+            <div class="panel-title">Change Master Password</div>
+            
+            <div class="form-group">
+              <label class="form-label" for="sec-name">Admin User Name</label>
+              <input type="text" id="sec-name" class="form-input" value="putta" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="sec-new-pass">New Master Password</label>
+              <input type="password" id="sec-new-pass" class="form-input" placeholder="Enter new password" />
+            </div>
+
+            <button id="save-sec-btn" class="btn-primary" type="button" style="width: auto;">
+              Update Password
+            </button>
+          </div>
+
+          <!-- Firebase Cloud Setup Guide -->
+          <div class="panel-card">
+            <div class="panel-title">
+              <span>Cloud Realtime Sync</span>
+              <span style="font-size: 0.8rem; color: var(--color-success);">🟢 Zero Setup Needed Locally</span>
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 14px;">
+              Your knock portal is currently running with <strong>Instant Local & Tab-to-Tab Realtime Sync</strong>. Any edits you make or test right now update the live invitation immediately.
+            </p>
+            <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.6;">
+              When deploying to GitHub Pages, if you wish to sync visitor analytics across thousands of guests on different phones simultaneously, you can optionally link a free Google Firebase Firestore database.
+            </p>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast" role="status" aria-live="polite">
+    <span id="toast-icon">✨</span>
+    <span id="toast-msg">Settings saved successfully!</span>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/analytics.js"></script>
+  <script src="js/admin.js"></script>
+
+  <!-- Firebase SDK (for cross-device sync) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script src="js/firebase-sync.js"></script>
+</body>
+</html>
+
+
