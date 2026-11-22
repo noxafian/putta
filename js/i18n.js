@@ -26,7 +26,7 @@
       openingTitle: 'Housewarming<br />Ceremony',
       openingFamily: 'Putta Ramakrishna \u0026 Laxmi Prasanna · Putta Sangeeth \u0026 Vijaya Gowri',
       openingDate: '3 December 2026',
-      openingTime: '3:00 AM',
+      openingTime: '4:57 AM',
       openingHint: 'scroll to explore',
 
       // Hero Section
@@ -35,7 +35,7 @@
       heroTitleMain: 'Ceremony',
       heroFamily: 'Putta Ramakrishna \u0026 Laxmi Prasanna · Putta Sangeeth \u0026 Vijaya Gowri',
       heroDatePill: '3 December 2026',
-      heroTimePill: '3:00 AM',
+      heroTimePill: '4:57 AM',
 
       // House Photo Frame
       photoCaption: 'A new chapter begins here',
@@ -52,7 +52,7 @@
       cardDateVal: '3 December',
       cardDateSub: '2026 · Thursday',
       cardTimeLabel: 'Time',
-      cardTimeVal: '3:00 AM',
+      cardTimeVal: '4:57 AM',
       cardTimeSub: 'Thursday Early Morning',
       cardGalleryLabel: 'Event Moments',
       cardGalleryVal: 'Photos & Videos',
@@ -122,7 +122,7 @@
       openingTitle: 'గృహప్రవేశ<br />మహోత్సవం',
       openingFamily: 'పుట్టా రామకృష్ణ \u0026 లక్ష్మీ ప్రసన్న · పుట్టా సంగీత్ \u0026 విజయ గౌరి',
       openingDate: '3 December 2026',
-      openingTime: '3:00 AM',
+      openingTime: '4:57 AM',
       openingHint: 'ఆహ్వానాన్ని వీక్షించండి',
 
       // Hero Section
@@ -131,7 +131,7 @@
       heroTitleMain: 'మహోత్సవం',
       heroFamily: 'పుట్టా రామకృష్ణ \u0026 లక్ష్మీ ప్రసన్న · పుట్టా సంగీత్ \u0026 విజయ గౌరి',
       heroDatePill: '3 December 2026',
-      heroTimePill: '3:00 AM',
+      heroTimePill: '4:57 AM',
 
       // House Photo Frame
       photoCaption: 'నూతన గృహం · నూతన అధ్యాయం',
@@ -148,7 +148,7 @@
       cardDateVal: '3 December',
       cardDateSub: '2026 · Thursday',
       cardTimeLabel: 'Time',
-      cardTimeVal: '3:00 AM',
+      cardTimeVal: '4:57 AM',
       cardTimeSub: 'Thursday Early Morning',
       cardGalleryLabel: 'Event Moments',
       cardGalleryVal: 'Photos & Videos',

@@ -31,6 +31,18 @@
     setupLanguageControls();
     setupSecurityControls();
     setupAnalytics();
+    startDashboardClock();
+
+    // Listen to real-time config updates (e.g. from other tabs / Supabase)
+    if (window.KnockConfig) {
+      window.KnockConfig.onUpdate(function (updatedCfg) {
+        AdminApp.config = updatedCfg;
+        if (AdminApp.isLoggedIn) {
+          populateFormFields();
+          updateLivePreview();
+        }
+      });
+    }
 
     // Check existing session
     if (sessionStorage.getItem(SESSION_KEY) === 'true') {
@@ -116,6 +128,7 @@
 
     populateFormFields();
     updateLivePreview();
+    startDashboardClock();
     renderAnalytics();
   }
 
@@ -240,7 +253,7 @@
     setVal('cfg-family', cfg.familyName || 'Putta Ramakrishna, Laxmi Prasanna, Sangeeth & Vijaya Gowri');
     setVal('cfg-date-day', cfg.dateDay || '3 December 2026');
     setVal('cfg-date-sub', cfg.dateYearSub || '2026 · Thursday');
-    setVal('cfg-time', cfg.timeDisplay || '3:00 AM');
+    setVal('cfg-time', cfg.timeDisplay || '4:57 AM');
     setVal('cfg-time-sub', cfg.timeSub || 'Thursday Early Morning');
     setVal('cfg-venue', cfg.venueAddress || '');
     setVal('cfg-map-link', cfg.mapDirectionsUrl || '');
@@ -255,11 +268,23 @@
     setVal('timer-heading-input', cfg.timerHeading || 'Auspicious Muhurtham In');
     setVal('cfg-timer-heading', cfg.timerHeading || 'Auspicious Muhurtham In');
 
+    var dashHeading = document.getElementById('dash-timer-heading');
+    if (dashHeading) dashHeading.textContent = cfg.timerHeading || 'Auspicious Muhurtham In';
+
     var targetDisplay = document.getElementById('current-target-display');
     if (targetDisplay && cfg.targetIso) {
       try {
         var dt = new Date(cfg.targetIso);
         targetDisplay.textContent = dt.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) + ', ' + (cfg.timeDisplay || '4:57 AM') + ' IST';
+      } catch (e) {}
+    }
+
+    if (cfg.targetIso) {
+      try {
+        var dObj = new Date(cfg.targetIso);
+        var tzOffset = dObj.getTimezoneOffset() * 60000;
+        var localISOTime = (new Date(dObj.getTime() - tzOffset)).toISOString().slice(0, 16);
+        setVal('timer-target-input', localISOTime);
       } catch (e) {}
     }
 
@@ -277,6 +302,12 @@
       galleryBadge.style.background = cfg.galleryActive ? 'rgba(39, 174, 96, 0.15)' : 'rgba(248, 113, 113, 0.15)';
       galleryBadge.style.color = cfg.galleryActive ? 'var(--color-success)' : 'var(--color-danger)';
     }
+
+    var galleryPrevHeading = document.getElementById('gallery-preview-heading');
+    if (galleryPrevHeading) galleryPrevHeading.textContent = cfg.galleryHeading || 'Event Moments & Photos';
+
+    var galleryUrlPrev = document.getElementById('gallery-url-preview');
+    if (galleryUrlPrev) galleryUrlPrev.textContent = cfg.galleryAlbumUrl || 'No album URL set yet (friendly alert shown on click)';
 
     // Language
     var langCb = document.getElementById('lang-toggle-checkbox');
@@ -299,7 +330,7 @@
     var ceremony = getVal('cfg-ceremony') || 'Housewarming Ceremony';
     var family = getVal('cfg-family') || 'Putta Family';
     var date = getVal('cfg-date-day') || '3 December 2026';
-    var time = getVal('cfg-time') || '3:00 AM';
+    var time = getVal('cfg-time') || '4:57 AM';
     var note = getVal('cfg-note') || 'We cordially invite you and your family to grace the auspicious occasion of our Housewarming Ceremony.';
 
     var prevTitle = document.getElementById('prev-title');
@@ -316,12 +347,44 @@
   }
 
   /* ════════════════════════════════════════════
-     4 · COUNTDOWN TIMER SETTINGS
+     4 · COUNTDOWN TIMER SETTINGS & LIVE TICKER
   ════════════════════════════════════════════ */
+  var dashboardClockInterval = null;
+
+  function startDashboardClock() {
+    if (dashboardClockInterval) clearInterval(dashboardClockInterval);
+
+    function tick() {
+      var cfg = window.KnockConfig ? window.KnockConfig.get() : (AdminApp.config || {});
+      var targetIso = cfg.targetIso || '2026-12-03T04:57:00+05:30';
+      var diff = new Date(targetIso).getTime() - Date.now();
+      var d = 0, h = 0, m = 0, s = 0;
+      if (diff > 0) {
+        d = Math.floor(diff / (1000 * 60 * 60 * 24));
+        h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        s = Math.floor((diff % 1000) / 1000); // safety fallback
+        s = Math.floor((diff / 1000) % 60);
+      }
+      var dEl = document.getElementById('dash-days');
+      var hEl = document.getElementById('dash-hours');
+      var mEl = document.getElementById('dash-mins');
+      var sEl = document.getElementById('dash-secs');
+      if (dEl) dEl.textContent = d < 10 ? '0' + d : d;
+      if (hEl) hEl.textContent = h < 10 ? '0' + h : h;
+      if (mEl) mEl.textContent = m < 10 ? '0' + m : m;
+      if (sEl) sEl.textContent = s < 10 ? '0' + s : s;
+    }
+
+    tick();
+    dashboardClockInterval = setInterval(tick, 1000);
+  }
+
   function setupTimerControls() {
     var saveBtn = document.getElementById('save-timer-btn');
     var toggle = document.getElementById('timer-toggle-checkbox');
-    var headingInput = document.getElementById('cfg-timer-heading');
+    var headingInput = document.getElementById('timer-heading-input') || document.getElementById('cfg-timer-heading');
+    var targetInput = document.getElementById('timer-target-input');
 
     if (toggle) {
       toggle.addEventListener('change', function () {
@@ -335,8 +398,20 @@
 
     if (headingInput) {
       headingInput.addEventListener('input', function () {
-        var prev = document.getElementById('timer-preview-heading');
+        var prev = document.getElementById('dash-timer-heading') || document.getElementById('timer-preview-heading');
         if (prev) prev.textContent = headingInput.value || 'Auspicious Muhurtham In';
+      });
+    }
+
+    if (targetInput) {
+      targetInput.addEventListener('input', function () {
+        var targetDisplay = document.getElementById('current-target-display');
+        if (targetDisplay && targetInput.value) {
+          try {
+            var dt = new Date(targetInput.value);
+            targetDisplay.textContent = dt.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) + ', ' + dt.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }) + ' IST';
+          } catch (e) {}
+        }
       });
     }
 
@@ -345,13 +420,25 @@
         var isActive = toggle ? toggle.checked : true;
         var heading = headingInput ? headingInput.value.trim() : 'Auspicious Muhurtham In';
 
-        if (window.KnockConfig) {
-          window.KnockConfig.save({
-            timerActive: isActive,
-            timerHeading: heading
-          });
+        var updates = {
+          timerActive: isActive,
+          timerHeading: heading
+        };
+
+        if (targetInput && targetInput.value) {
+          try {
+            var val = targetInput.value;
+            // Append seconds and IST offset +05:30 if datetime-local string
+            var isoString = val.length === 16 ? val + ':00+05:30' : new Date(val).toISOString();
+            updates.targetIso = isoString;
+          } catch (e) {}
         }
-        showToast('⏱️ Timer settings saved!', 'success');
+
+        if (window.KnockConfig) {
+          window.KnockConfig.save(updates);
+        }
+        startDashboardClock();
+        showToast('⏱️ Timer settings saved & published!', 'success');
       });
     }
   }
@@ -361,17 +448,27 @@
   ════════════════════════════════════════════ */
   function setupPhotosControls() {
     var saveBtn = document.getElementById('save-gallery-btn');
-    var toggle = document.getElementById('photos-toggle-checkbox');
-    var headingInput = document.getElementById('cfg-gallery-heading');
-    var urlInput = document.getElementById('cfg-gallery-url');
+    var toggle = document.getElementById('gallery-toggle-checkbox') || document.getElementById('photos-toggle-checkbox');
+    var headingInput = document.getElementById('gallery-heading-input') || document.getElementById('cfg-gallery-heading');
+    var urlInput = document.getElementById('gallery-album-url') || document.getElementById('cfg-gallery-url');
+
+    function updateBadge() {
+      var badge = document.getElementById('gallery-status-badge');
+      if (badge && toggle) {
+        badge.textContent = toggle.checked ? 'ACTIVE ON SITE' : 'HIDDEN FROM SITE';
+        badge.style.background = toggle.checked ? 'rgba(39, 174, 96, 0.15)' : 'rgba(248, 113, 113, 0.15)';
+        badge.style.color = toggle.checked ? 'var(--color-success)' : 'var(--color-danger)';
+      }
+    }
 
     if (toggle) {
-      toggle.addEventListener('change', function () {
-        var badge = document.getElementById('gallery-status-badge');
-        if (badge) {
-          badge.textContent = toggle.checked ? 'PHOTOS VISIBLE' : 'PHOTOS HIDDEN';
-          badge.className = toggle.checked ? 'preview-badge' : 'preview-badge preview-badge--hidden';
-        }
+      toggle.addEventListener('change', updateBadge);
+    }
+
+    if (headingInput) {
+      headingInput.addEventListener('input', function () {
+        var prev = document.getElementById('gallery-preview-heading');
+        if (prev) prev.textContent = headingInput.value.trim() || 'Event Moments & Photos';
       });
     }
 
@@ -379,7 +476,7 @@
       urlInput.addEventListener('input', function () {
         var urlPrev = document.getElementById('gallery-url-preview');
         if (urlPrev) {
-          urlPrev.textContent = urlInput.value.trim() || 'No album URL set yet';
+          urlPrev.textContent = urlInput.value.trim() || 'No album URL set yet (friendly alert shown on click)';
         }
       });
     }
@@ -397,7 +494,8 @@
             galleryAlbumUrl: url
           });
         }
-        showToast('📸 Event photo settings saved!', 'success');
+        updateBadge();
+        showToast('📸 Event photo settings saved & published!', 'success');
       });
     }
   }
