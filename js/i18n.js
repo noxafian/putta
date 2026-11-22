@@ -1,4 +1,4 @@
-﻿/**
+/**
  * i18n.js — Bilingual Translation & Language Selector Engine
  * ─────────────────────────────────────────────────────────────
  * Powers seamless Telugu (తెలుగు) & English ceremonial translations,

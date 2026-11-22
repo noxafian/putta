@@ -34,7 +34,7 @@
   function detectPageType() {
     var path = (window.location.pathname || '').toLowerCase();
     isAdmin = path.indexOf('admin') !== -1 ||
-              document.getElementById('login-view') !== null;
+      document.getElementById('login-view') !== null;
   }
 
   /* ─── Sync Status Indicator (Admin Navbar) ─── */
