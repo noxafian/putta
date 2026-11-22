@@ -526,6 +526,8 @@
         var url = config.galleryAlbumUrl || '';
         if (url) {
           window.open(url, '_blank', 'noopener,noreferrer');
+        } else {
+          alert('📸 Event photos & videos will be available right here shortly! Please check back during or after the ceremony.');
         }
       });
       galleryDetailCard.addEventListener('keydown', function (e) {
@@ -533,7 +535,11 @@
           e.preventDefault();
           var config = window.KnockConfig ? window.KnockConfig.get() : {};
           var url = config.galleryAlbumUrl || '';
-          if (url) window.open(url, '_blank', 'noopener,noreferrer');
+          if (url) {
+            window.open(url, '_blank', 'noopener,noreferrer');
+          } else {
+            alert('📸 Event photos & videos will be available right here shortly! Please check back during or after the ceremony.');
+          }
         }
       });
     }

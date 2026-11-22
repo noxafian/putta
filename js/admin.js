@@ -252,13 +252,31 @@
     // Timer
     var timerCb = document.getElementById('timer-toggle-checkbox');
     if (timerCb) timerCb.checked = cfg.timerActive !== false;
+    setVal('timer-heading-input', cfg.timerHeading || 'Auspicious Muhurtham In');
     setVal('cfg-timer-heading', cfg.timerHeading || 'Auspicious Muhurtham In');
 
+    var targetDisplay = document.getElementById('current-target-display');
+    if (targetDisplay && cfg.targetIso) {
+      try {
+        var dt = new Date(cfg.targetIso);
+        targetDisplay.textContent = dt.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) + ', ' + (cfg.timeDisplay || '4:57 AM') + ' IST';
+      } catch (e) {}
+    }
+
     // Gallery / Photos
-    var galleryCb = document.getElementById('photos-toggle-checkbox');
+    var galleryCb = document.getElementById('gallery-toggle-checkbox') || document.getElementById('photos-toggle-checkbox');
     if (galleryCb) galleryCb.checked = !!cfg.galleryActive;
+    setVal('gallery-heading-input', cfg.galleryHeading || 'Event Moments & Photos');
     setVal('cfg-gallery-heading', cfg.galleryHeading || 'Event Moments & Photos');
+    setVal('gallery-album-url', cfg.galleryAlbumUrl || '');
     setVal('cfg-gallery-url', cfg.galleryAlbumUrl || '');
+
+    var galleryBadge = document.getElementById('gallery-status-badge');
+    if (galleryBadge) {
+      galleryBadge.textContent = cfg.galleryActive ? 'ACTIVE ON SITE' : 'HIDDEN FROM SITE';
+      galleryBadge.style.background = cfg.galleryActive ? 'rgba(39, 174, 96, 0.15)' : 'rgba(248, 113, 113, 0.15)';
+      galleryBadge.style.color = cfg.galleryActive ? 'var(--color-success)' : 'var(--color-danger)';
+    }
 
     // Language
     var langCb = document.getElementById('lang-toggle-checkbox');
