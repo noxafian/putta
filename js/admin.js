@@ -174,7 +174,7 @@
     var inputs = [
       'cfg-ceremony', 'cfg-family', 'cfg-date-day', 'cfg-date-sub',
       'cfg-time', 'cfg-time-sub', 'cfg-venue', 'cfg-map-link',
-      'cfg-map-embed', 'cfg-3d-active', 'cfg-note'
+      'cfg-map-embed', 'cfg-note'
     ];
 
     inputs.forEach(function (id) {
@@ -197,7 +197,6 @@
         var mapLink = getVal('cfg-map-link');
         var mapEmbed = getVal('cfg-map-embed');
         var note = getVal('cfg-note');
-        var active3d = document.getElementById('cfg-3d-active') ? document.getElementById('cfg-3d-active').checked : true;
 
         var formattedDateDisplay = dateDay;
         if (dateDay && dateSub) {
@@ -217,8 +216,7 @@
           timeSub: timeSub,
           venueAddress: venue,
           mapDirectionsUrl: mapLink,
-          invitationNote: note,
-          apartment3dActive: active3d
+          invitationNote: note
         };
 
         if (mapEmbed && mapEmbed.trim()) {
@@ -258,9 +256,6 @@
     setVal('cfg-venue', cfg.venueAddress || '');
     setVal('cfg-map-link', cfg.mapDirectionsUrl || '');
     setVal('cfg-map-embed', cfg.mapEmbedUrl || '');
-
-    var cb3d = document.getElementById('cfg-3d-active');
-    if (cb3d) cb3d.checked = cfg.apartment3dActive !== false;
 
     // Timer
     var timerCb = document.getElementById('timer-toggle-checkbox');
