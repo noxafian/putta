@@ -56,7 +56,7 @@
   function renderTimer() {
     var config = window.KnockConfig ? window.KnockConfig.get() : {
       timerActive: true,
-      targetIso: '2026-08-31T03:00:00+05:30',
+      targetIso: '2026-12-03T03:00:00+05:30',
       timerHeading: 'Auspicious Muhurtham In'
     };
 
@@ -81,7 +81,7 @@
     }
 
     function tick() {
-      var t = getRemainingTime(config.targetIso || '2026-08-31T03:00:00+05:30');
+      var t = getRemainingTime(config.targetIso || '2026-12-03T03:00:00+05:30');
       var clockWrapper = document.getElementById('countdown-clock');
       var completeMsg = document.getElementById('countdown-complete');
 

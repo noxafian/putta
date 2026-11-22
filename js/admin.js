@@ -186,16 +186,25 @@
         var note = getVal('cfg-note');
         var active3d = document.getElementById('cfg-3d-active') ? document.getElementById('cfg-3d-active').checked : true;
 
+        var formattedDateDisplay = dateDay;
+        if (dateDay && dateSub) {
+          var yr = dateSub.split('·')[0].trim();
+          if (dateDay.indexOf(yr) === -1) {
+            formattedDateDisplay = dateDay + ' ' + yr;
+          }
+        }
+
         var updated = {
           ceremonyName: ceremony,
           familyName: family,
           dateDay: dateDay,
-          dateDisplay: dateDay,
+          dateDisplay: formattedDateDisplay,
           dateYearSub: dateSub,
           timeDisplay: time,
           timeSub: timeSub,
           venueAddress: venue,
           mapDirectionsUrl: mapLink,
+          invitationNote: note,
           apartment3dActive: active3d
         };
 

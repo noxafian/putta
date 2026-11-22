@@ -52,6 +52,13 @@
     if (closeFamily && config.familyName && !document.querySelector('.family-wishes-card')) {
       closeFamily.textContent = config.familyName;
     }
+    // Hero Pills (Date & Time)
+    var heroDateEl = document.getElementById('hero-date-text');
+    var heroTimeEl = document.getElementById('hero-time-text');
+    if (heroDateEl && config.dateDisplay) heroDateEl.textContent = config.dateDisplay;
+    if (heroTimeEl && config.timeDisplay) heroTimeEl.textContent = config.timeDisplay;
+
+    // Fallback querySelector in case custom markup
     var heroPills = document.querySelectorAll('.hero-event-details .detail-pill span:last-child');
     if (heroPills.length >= 2) {
       if (config.dateDisplay) heroPills[0].textContent = config.dateDisplay;

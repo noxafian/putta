@@ -277,10 +277,17 @@
     if (openTitle) openTitle.innerHTML = t.openingTitle;
     var openFamily = document.querySelector('.opening-family');
     if (openFamily) openFamily.textContent = t.openingFamily;
+    var cfg = window.KnockConfig ? window.KnockConfig.get() : {};
+    var activeDateDisplay = cfg.dateDisplay || t.heroDatePill;
+    var activeTimeDisplay = cfg.timeDisplay || t.heroTimePill;
+    var activeDateDay     = cfg.dateDay || t.cardDateVal;
+    var activeDateSub     = cfg.dateYearSub || t.cardDateSub;
+    var activeTimeSub     = cfg.timeSub || t.cardTimeSub;
+
     var openDate = document.querySelector('.opening-date');
-    if (openDate) openDate.textContent = t.openingDate;
+    if (openDate) openDate.textContent = activeDateDisplay;
     var openTime = document.querySelector('.opening-time');
-    if (openTime) openTime.textContent = t.openingTime;
+    if (openTime) openTime.textContent = activeTimeDisplay;
     var openHint = document.querySelector('.opening-hint');
     if (openHint) openHint.textContent = t.openingHint;
 
@@ -292,11 +299,25 @@
     var heroTitleMain = document.querySelector('.hero-title-main');
     if (heroTitleMain) heroTitleMain.textContent = t.heroTitleMain;
     var heroFamily = document.querySelector('.hero-family');
-    if (heroFamily) heroFamily.textContent = t.heroFamily;
+    if (heroFamily && cfg.familyName) {
+      if (cfg.familyName.indexOf('Sangeeth') !== -1 && cfg.familyName.indexOf('Ramakrishna') !== -1) {
+        heroFamily.innerHTML = 'Putta Ramakrishna &amp; Laxmi Prasanna<br><span style="font-size:0.82em;opacity:0.85">Putta Sangeeth &amp; Vijaya Gowri</span>';
+      } else {
+        heroFamily.textContent = cfg.familyShort || cfg.familyName;
+      }
+    } else if (heroFamily) {
+      heroFamily.textContent = t.heroFamily;
+    }
+
+    var heroDateEl = document.getElementById('hero-date-text');
+    var heroTimeEl = document.getElementById('hero-time-text');
+    if (heroDateEl) heroDateEl.textContent = activeDateDisplay;
+    if (heroTimeEl) heroTimeEl.textContent = activeTimeDisplay;
+
     var heroPills = document.querySelectorAll('.hero-event-details .detail-pill span:last-child');
     if (heroPills.length >= 2) {
-      heroPills[0].textContent = t.heroDatePill;
-      heroPills[1].textContent = t.heroTimePill;
+      heroPills[0].textContent = activeDateDisplay;
+      heroPills[1].textContent = activeTimeDisplay;
     }
 
     // Photo Caption
@@ -320,16 +341,16 @@
     var dateCardLabel = document.querySelector('[data-story="card-date"] .detail-card-label');
     if (dateCardLabel) dateCardLabel.textContent = t.cardDateLabel;
     var dateCardVal = document.querySelector('[data-story="card-date"] .detail-card-value');
-    if (dateCardVal) dateCardVal.textContent = t.cardDateVal;
+    if (dateCardVal) dateCardVal.textContent = activeDateDay;
     var dateCardSub = document.querySelector('[data-story="card-date"] .detail-card-sub');
-    if (dateCardSub) dateCardSub.textContent = t.cardDateSub;
+    if (dateCardSub) dateCardSub.textContent = activeDateSub;
 
     var timeCardLabel = document.querySelector('[data-story="card-time"] .detail-card-label');
     if (timeCardLabel) timeCardLabel.textContent = t.cardTimeLabel;
     var timeCardVal = document.querySelector('[data-story="card-time"] .detail-card-value');
-    if (timeCardVal) timeCardVal.textContent = t.cardTimeVal;
+    if (timeCardVal) timeCardVal.textContent = activeTimeDisplay;
     var timeCardSub = document.querySelector('[data-story="card-time"] .detail-card-sub');
-    if (timeCardSub) timeCardSub.textContent = t.cardTimeSub;
+    if (timeCardSub) timeCardSub.textContent = activeTimeSub;
 
     var galleryCardLabel = document.querySelector('[data-story="card-gallery"] .detail-card-label');
     if (galleryCardLabel) galleryCardLabel.textContent = t.cardGalleryLabel;
