@@ -776,8 +776,8 @@ a { color: inherit; text-decoration: none; }
   .house-photo-frame--3d-expanded { min-height: 680px; }
 }
 
-/* "View in 3D" pill button shown over the static photo */
-.a3d-activate-btn {
+/* "View Family Invitation" pill button shown over the house photo */
+.family-invitation-pill {
   position: absolute;
   bottom: 18px;
   left: 50%;
@@ -785,40 +785,60 @@ a { color: inherit; text-decoration: none; }
   z-index: 6;
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  background: rgba(26, 51, 51, 0.88);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(212, 175, 55, 0.6);
+  gap: 8px;
+  background: rgba(26, 51, 51, 0.90);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(212, 175, 55, 0.7);
   border-radius: 28px;
   padding: 10px 22px;
   color: #F8F5EE;
   font-family: var(--font-sans);
   font-size: 0.82rem;
   font-weight: 600;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
+  text-decoration: none;
   cursor: pointer;
   outline: none;
   transition: all 0.25s ease;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.3), 0 0 12px rgba(212, 175, 55, 0.25);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35), 0 0 14px rgba(212, 175, 55, 0.3);
   white-space: nowrap;
 }
-.a3d-activate-btn:hover {
-  background: rgba(44, 74, 62, 0.96);
-  border-color: rgba(212, 175, 55, 0.9);
+
+.family-invitation-pill:hover,
+.family-invitation-pill:focus-visible {
+  background: rgba(44, 74, 62, 0.98);
+  border-color: rgba(212, 175, 55, 1);
   transform: translateX(-50%) translateY(-2px);
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35), 0 0 18px rgba(212, 175, 55, 0.4);
-}
-.a3d-activate-btn-icon {
-  font-size: 1.05rem;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4), 0 0 20px rgba(212, 175, 55, 0.5);
+  color: #FFFFFF;
+  text-decoration: none;
 }
 
-.family-invitation-badge {
-  text-decoration: none;
+.family-pill-icon {
+  font-size: 1.05rem;
+  line-height: 1;
 }
-.family-invitation-badge:hover {
-  text-decoration: none;
-  color: #FFFFFF;
+
+.family-pill-text {
+  font-family: 'Noto Sans Telugu', var(--font-sans);
+  font-weight: 500;
+  letter-spacing: 0.03em;
+}
+
+.family-pill-arrow {
+  margin-left: 3px;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+/* Ensure no legacy 3D button ever shows */
+#a3d-activate-btn,
+.a3d-activate-btn {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
 .house-photo-img {
