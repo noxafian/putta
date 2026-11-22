@@ -66,9 +66,11 @@
     WelcomeVideo.pauseBtn = document.getElementById('btn-pause-video');
     WelcomeVideo.pauseIcon = document.getElementById('pause-icon');
     WelcomeVideo.replayBtn = document.getElementById('btn-replay-video');
+    WelcomeVideo.soundBarBtn = document.getElementById('btn-sound-bar');
+    WelcomeVideo.soundBarText = document.getElementById('bar-sound-text');
 
-    // Start muted — browser autoplay policy requires muted for silent autoplay.
-    // Sound is turned ON explicitly when guest arrives via fly-in (playFromGateArrival).
+    // Start muted by default to satisfy strict browser autoplay policy,
+    // but unlock immediately on any user gesture or intersection
     video.muted = true;
     video.volume = 1.0;
     WelcomeVideo.isMuted = true;
@@ -79,6 +81,13 @@
     // 2. Sound Toggle Click
     if (WelcomeVideo.soundBtn) {
       WelcomeVideo.soundBtn.addEventListener('click', function (e) {
+        e.preventDefault();
+        toggleSound();
+      });
+    }
+
+    if (WelcomeVideo.soundBarBtn) {
+      WelcomeVideo.soundBarBtn.addEventListener('click', function (e) {
         e.preventDefault();
         toggleSound();
       });
@@ -109,7 +118,37 @@
       }
     });
 
-    // 6. IntersectionObserver for Autoplay when scrolled into view
+    // 6. Global First-Interaction Audio Unlock
+    // When the user touches, scrolls, or clicks anywhere on the invitation,
+    // immediately unmute so the video plays with audio without needing to press the center!
+    function unlockAudioGlobally() {
+      if (WelcomeVideo.video && WelcomeVideo.isMuted) {
+        WelcomeVideo.video.muted = false;
+        WelcomeVideo.video.volume = 1.0;
+        WelcomeVideo.isMuted = false;
+        setSoundOnUI();
+      }
+      ['click', 'touchstart', 'touchend', 'scroll', 'pointerdown', 'keydown'].forEach(function (evt) {
+        window.removeEventListener(evt, unlockAudioGlobally);
+      });
+    }
+    ['click', 'touchstart', 'touchend', 'scroll', 'pointerdown', 'keydown'].forEach(function (evt) {
+      window.addEventListener(evt, unlockAudioGlobally, { passive: true, once: true });
+    });
+
+    // If user clicks "View Family Invitation" badge, unlock and start audio
+    var familyInviteBtn = document.getElementById('btn-view-family-invitation');
+    if (familyInviteBtn) {
+      familyInviteBtn.addEventListener('click', function () {
+        unlockAudioGlobally();
+        if (WelcomeVideo.video) {
+          WelcomeVideo.video.muted = false;
+          WelcomeVideo.video.play().then(setSoundOnUI).catch(function () {});
+        }
+      });
+    }
+
+    // 7. IntersectionObserver for Autoplay when scrolled into view
     setupIntersectionObserver();
 
     console.log('WelcomeVideo: Putta Family Greeting Video initialized.');
@@ -124,9 +163,21 @@
           if (entry.isIntersecting) {
             // In view: start playback
             if (WelcomeVideo.video && WelcomeVideo.video.paused) {
-              WelcomeVideo.video.play().catch(function (err) {
-                console.log('Video autoplay prevented by browser policy:', err);
-              });
+              // Attempt unmuted play first
+              var playPromise = WelcomeVideo.video.play();
+              if (playPromise !== undefined) {
+                playPromise.then(function () {
+                  if (!WelcomeVideo.video.muted) {
+                    setSoundOnUI();
+                  }
+                }).catch(function (err) {
+                  console.log('Unmuted playback prevented by browser, falling back to muted:', err);
+                  WelcomeVideo.video.muted = true;
+                  WelcomeVideo.isMuted = true;
+                  WelcomeVideo.video.play().catch(function () {});
+                  setSoundOffUI();
+                });
+              }
             }
           } else {
             // Out of view: pause to save battery and data
@@ -264,23 +315,18 @@
   function setSoundOnUI() {
     WelcomeVideo.isMuted = false;
     if (WelcomeVideo.soundIcon) WelcomeVideo.soundIcon.textContent = '🔊';
-    if (WelcomeVideo.soundText) WelcomeVideo.soundText.textContent = 'Sound ON · మ్యూట్ చేయండి';
+    if (WelcomeVideo.soundText) WelcomeVideo.soundText.textContent = 'Sound ON · మ్యూట్';
+    if (WelcomeVideo.soundBarText) WelcomeVideo.soundBarText.textContent = '🔇 Mute Sound';
     if (WelcomeVideo.soundBtn) WelcomeVideo.soundBtn.classList.add('sound-active');
-    // Dim the overlay after 3s so it doesn't block the video
-    setTimeout(function () {
-      if (!WelcomeVideo.isMuted && WelcomeVideo.soundOverlay) {
-        WelcomeVideo.soundOverlay.classList.add('overlay-dimmed');
-      }
-    }, 3000);
   }
 
   /** Update UI to reflect SOUND OFF / muted state (tap to unmute prompt) */
   function setSoundOffUI() {
     WelcomeVideo.isMuted = true;
     if (WelcomeVideo.soundIcon) WelcomeVideo.soundIcon.textContent = '🔇';
-    if (WelcomeVideo.soundText) WelcomeVideo.soundText.textContent = 'Tap for Sound · ధ్వని వినండి';
+    if (WelcomeVideo.soundText) WelcomeVideo.soundText.textContent = 'Unmute · ధ్వని వినండి';
+    if (WelcomeVideo.soundBarText) WelcomeVideo.soundBarText.textContent = '🔊 Turn Sound ON';
     if (WelcomeVideo.soundBtn) WelcomeVideo.soundBtn.classList.remove('sound-active');
-    if (WelcomeVideo.soundOverlay) WelcomeVideo.soundOverlay.classList.remove('overlay-dimmed');
   }
 
   // Auto-initialize when DOM is ready

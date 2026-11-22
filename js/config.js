@@ -36,7 +36,7 @@
     mapEmbedUrl: 'https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1902.4835572071504!2d78.3350671!3d17.5090832!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bcb92810eac0001%3A0x591312c95758d7ae!2sG85M%2BJW8%2C%20PJR%20Enclave%2C%20PJR%20Layout%2C%20Miyapur%2C%20Hyderabad%2C%20Telangana%20500050!5e0!3m2!1sen!2sin!4v1795002922777!5m2!1sen!2sin',
     mapDirectionsUrl: 'https://www.google.com/maps/place/17.5090832,78.3350671/@17.5090832,78.3350671,18z',
     // 3D Architectural Experience & Geospatial Configuration (ENG-3D-MAPS-BILWA-V3)
-    apartment3dActive: true,
+    apartment3dActive: false,
     apartment3dAutoFly: false,
     geoSpatial: {
       propertyPlacePin: { lat: 17.5090431, lng: 78.3348205 },

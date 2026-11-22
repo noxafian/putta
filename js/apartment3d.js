@@ -78,13 +78,15 @@
   function init() {
     if (Apartment3D.initialized) return;
 
-    // Check if 3D experience is disabled via KnockConfig
+    // Check if 3D experience is enabled via KnockConfig (disabled by default)
     if (window.KnockConfig) {
       var cfg = window.KnockConfig.get();
-      if (cfg && cfg.apartment3dActive === false) {
-        console.log('Apartment3D: Disabled via KnockConfig.');
+      if (!cfg || cfg.apartment3dActive !== true) {
+        console.log('Apartment3D: Disabled.');
         return;
       }
+    } else {
+      return;
     }
 
     var frame = document.querySelector('.house-photo-frame');
