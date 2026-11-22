@@ -19,14 +19,14 @@
     var desc  = config.invitationNote || 'You are cordially invited to celebrate the Putta Family Gruhapravesam Ceremony.';
     var loc   = config.venueAddress || 'Flat No: 803, The Bilwa by SIPL, G85M+JW8, PJR Enclave, PJR Layout, Miyapur, Hyderabad, Telangana 500050';
 
-    // Dates: Default 3 December 2026, 03:00 AM IST (UTC+5:30)
-    // 3:00 AM IST on 3 Dec = 21:30 UTC on 2 Dec
-    var startLocal = '2026-12-03T03:00:00';
-    var endLocal   = '2026-12-03T06:00:00';
-    var startUTC   = '20261202T213000Z';
-    var endUTC     = '20261203T003000Z';
-    var icsStart   = '20261203T030000';
-    var icsEnd     = '20261203T060000';
+    // Dates: Default 3 December 2026, 04:57 AM IST (UTC+5:30)
+    // 4:57 AM IST on 3 Dec = 23:27 UTC on 2 Dec
+    var startLocal = '2026-12-03T04:57:00';
+    var endLocal   = '2026-12-03T08:00:00';
+    var startUTC   = '20261202T232700Z';
+    var endUTC     = '20261203T023000Z';
+    var icsStart   = '20261203T045700';
+    var icsEnd     = '20261203T080000';
 
     if (config.targetIso) {
       try {

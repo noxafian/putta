@@ -20,10 +20,10 @@
     dateDisplay: '3 December 2026',
     dateDay: '3 December',
     dateYearSub: '2026 · Thursday',
-    timeDisplay: '3:00 AM',
+    timeDisplay: '4:57 AM',
     timeSub: 'Thursday Early Morning',
     // Target datetime in IST (UTC+5:30) for accurate countdown
-    targetIso: '2026-12-03T03:00:00+05:30',
+    targetIso: '2026-12-03T04:57:00+05:30',
     // Timer toggle (Active = true, Hidden = false)
     timerActive: true,
     timerHeading: 'Auspicious Muhurtham In',
