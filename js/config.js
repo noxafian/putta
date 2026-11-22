@@ -61,7 +61,8 @@
     showLangSwitcher: true, // Floating 'తెలుగు | EN' toggle on the invitation
     adminName: 'putta',     // Admin ID / Username
     adminPass: 'Putta@2026', // Master Password
-    firebaseConfig: null // Optional cloud config
+    supabaseConfig: { url: '', anonKey: '' },
+    firebaseConfig: null // Legacy
   };
 
   var listeners = [];
@@ -80,24 +81,30 @@
     console.warn('BroadcastChannel not available:', err);
   }
 
+  // Cross-Tab Instant Sync listener (triggers when Admin changes settings in another tab)
+  try {
+    window.addEventListener('storage', function (e) {
+      if (e.key === STORAGE_KEY && e.newValue) {
+        try {
+          var updated = JSON.parse(e.newValue);
+          notifyListeners(updated);
+        } catch (err) {}
+      }
+    });
+  } catch (err) {}
+
   function get() {
     try {
       var saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         var parsed = JSON.parse(saved);
-        // Automatic migration if old cached Ananthapur or Secunderabad address exists
+        // Legacy cleanup if old test addresses exist
         var needsUpdate = false;
-        if (parsed.venueAddress && (parsed.venueAddress.indexOf('Ananthapur') !== -1 || parsed.venueAddress.indexOf('Nagaram') !== -1 || parsed.venueAddress.indexOf('FJR7') !== -1 || parsed.venueAddress.indexOf('Secunderabad') !== -1 || parsed.venueAddress.indexOf('500049') !== -1 || parsed.venueAddress.indexOf('803') === -1)) {
+        if (parsed.venueAddress && (parsed.venueAddress.indexOf('Ananthapur') !== -1 || parsed.venueAddress.indexOf('Nagaram') !== -1 || parsed.venueAddress.indexOf('FJR7') !== -1 || parsed.venueAddress.indexOf('Secunderabad') !== -1)) {
           parsed.venueAddress = DEFAULT_CONFIG.venueAddress;
           parsed.venueName = DEFAULT_CONFIG.venueName;
           parsed.mapEmbedUrl = DEFAULT_CONFIG.mapEmbedUrl;
           parsed.mapDirectionsUrl = DEFAULT_CONFIG.mapDirectionsUrl;
-          needsUpdate = true;
-        }
-        if (parsed.familyName && parsed.familyName.indexOf('Family') !== -1) {
-          parsed.familyName = DEFAULT_CONFIG.familyName;
-          parsed.familyShort = DEFAULT_CONFIG.familyShort;
-          parsed.title = DEFAULT_CONFIG.title;
           needsUpdate = true;
         }
         if (parsed.adminPass === '3251' || parsed.adminPass === 'putta2026' || parsed.adminName === 'Admin') {

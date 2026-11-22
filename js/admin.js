@@ -417,6 +417,19 @@
     var nameInput = document.getElementById('sec-name');
     var passInput = document.getElementById('sec-new-pass');
 
+    var saveSbBtn = document.getElementById('save-sb-btn');
+    var sbUrlInput = document.getElementById('cfg-sb-url');
+    var sbKeyInput = document.getElementById('cfg-sb-key');
+
+    // Populate Supabase fields from current config
+    var cfg = window.KnockConfig ? window.KnockConfig.get() : {};
+    if (sbUrlInput && cfg.supabaseConfig && cfg.supabaseConfig.url) {
+      sbUrlInput.value = cfg.supabaseConfig.url;
+    }
+    if (sbKeyInput && cfg.supabaseConfig && cfg.supabaseConfig.anonKey) {
+      sbKeyInput.value = cfg.supabaseConfig.anonKey;
+    }
+
     if (saveSecBtn) {
       saveSecBtn.addEventListener('click', function () {
         var newName = (nameInput.value || '').trim() || 'putta';
@@ -436,6 +449,22 @@
 
         passInput.value = '';
         showToast('🔐 Master Password updated successfully!', 'success');
+      });
+    }
+
+    if (saveSbBtn) {
+      saveSbBtn.addEventListener('click', function () {
+        var url = (sbUrlInput ? sbUrlInput.value : '').trim();
+        var key = (sbKeyInput ? sbKeyInput.value : '').trim();
+
+        if (window.KnockSupabase && typeof window.KnockSupabase.setCredentials === 'function') {
+          window.KnockSupabase.setCredentials(url, key);
+        } else if (window.KnockConfig) {
+          window.KnockConfig.save({
+            supabaseConfig: { url: url, anonKey: key }
+          });
+        }
+        showToast('⚡ Supabase Cloud Sync settings saved & connected!', 'success');
       });
     }
   }

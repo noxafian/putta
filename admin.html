@@ -732,20 +732,29 @@
             </button>
           </div>
 
-          <!-- Firebase Cloud Setup Guide -->
+          <!-- Supabase Cloud Sync Card -->
           <div class="panel-card">
             <div class="panel-title">
-              <span>Cloud Realtime Sync</span>
-              <span style="font-size: 0.8rem; color: var(--color-success);">🟢 Zero Setup Needed Locally</span>
+              <span>Supabase Cloud Sync</span>
+              <span id="sb-status-badge" style="font-size: 0.8rem; color: var(--color-success);">🟢 Active & Connected</span>
             </div>
-            <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 14px;">
-              Your knock portal is currently running with <strong>Instant Local & Tab-to-Tab Realtime Sync</strong>. Any
-              edits you make or test right now update the live invitation immediately.
+            <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 14px;">
+              Cross-device real-time sync is powered by Supabase. Any edits saved in this portal broadcast to all guests in real time.
             </p>
-            <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.6;">
-              When deploying to GitHub Pages, if you wish to sync visitor analytics across thousands of guests on
-              different phones simultaneously, you can optionally link a free Google Firebase Firestore database.
-            </p>
+
+            <div class="form-group">
+              <label class="form-label" for="cfg-sb-url">Supabase Project URL</label>
+              <input type="text" id="cfg-sb-url" class="form-input" placeholder="Connected securely" autocomplete="off" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="cfg-sb-key">Supabase Public Key</label>
+              <input type="password" id="cfg-sb-key" class="form-input" placeholder="••••••••••••••••••••••••" autocomplete="off" />
+            </div>
+
+            <button id="save-sb-btn" class="btn-primary" type="button" style="width: auto;">
+              Save & Test Supabase Sync
+            </button>
           </div>
         </div>
 
@@ -765,10 +774,9 @@
   <script src="js/analytics.js"></script>
   <script src="js/admin.js"></script>
 
-  <!-- Firebase SDK (for cross-device sync) -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-  <script src="js/firebase-sync.js"></script>
+  <!-- Supabase Real-time Sync SDK (Cross-device instant updates) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-sync.js"></script>
 </body>
 
 </html>

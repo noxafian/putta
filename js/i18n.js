@@ -470,6 +470,11 @@
     try {
       window.dispatchEvent(new CustomEvent('knock_lang_changed', { detail: { lang: lang } }));
     } catch (e) { }
+
+    // Re-apply custom event values from KnockConfig so translations don't wipe out admin edits
+    if (window.KnockHydrate && typeof window.KnockHydrate.applyConfig === 'function' && window.KnockConfig) {
+      window.KnockHydrate.applyConfig(window.KnockConfig.get());
+    }
   }
 
   function setLanguage(lang, persist) {

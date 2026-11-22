@@ -39,9 +39,10 @@
 
     // Hero Section
     var heroFamily = document.querySelector('.hero-family');
-    if (heroFamily && (config.familyShort || config.familyName)) {
-      // Keep rich couple layout if already present
-      if (!heroFamily.querySelector('span')) {
+    if (heroFamily && config.familyName) {
+      if (config.familyName.indexOf('Sangeeth') !== -1 && config.familyName.indexOf('Ramakrishna') !== -1) {
+        heroFamily.innerHTML = 'Putta Ramakrishna &amp; Laxmi Prasanna<br><span style="font-size:0.82em;opacity:0.85">Putta Sangeeth &amp; Vijaya Gowri</span>';
+      } else {
         heroFamily.textContent = config.familyShort || config.familyName;
       }
     }
@@ -93,15 +94,16 @@
 
   function init() {
     if (window.KnockConfig) {
-      applyConfigToDOM(window.KnockConfig.get());
+      // 1. Apply UI translations first
       if (window.KnockI18n && typeof window.KnockI18n.applyTranslations === 'function') {
         window.KnockI18n.applyTranslations(window.KnockI18n.getLang());
       }
+      // 2. Overlay live dynamic configuration from Admin on top
+      applyConfigToDOM(window.KnockConfig.get());
+
+      // 3. React instantly to any config changes from Admin / Supabase
       window.KnockConfig.onUpdate(function (updatedConfig) {
         applyConfigToDOM(updatedConfig);
-        if (window.KnockI18n && typeof window.KnockI18n.applyTranslations === 'function') {
-          window.KnockI18n.applyTranslations(window.KnockI18n.getLang());
-        }
       });
     }
   }
@@ -111,5 +113,9 @@
   } else {
     init();
   }
+
+  window.KnockHydrate = {
+    applyConfig: applyConfigToDOM
+  };
 
 })(window);
